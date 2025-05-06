@@ -1,0 +1,457 @@
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix ocp:  <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#> .
+@prefix time:  <http://www.w3.org/2006/time#> .
+@prefix osh:   <http://www.ocpshape.de/shape#> .
+
+#################################################################
+#    SHACL Shapes
+#################################################################
+
+### GENERAL SHACL SHAPES
+
+    osh:GeneralDatePropertyShape a sh:PropertyShape ;
+        sh:path ( ocp:hasActualTime ocp:hasEstimatedTime ) ;
+        sh:datatype xsd:date ;
+        sh:message "Dates must be in YYYY-MM-DD format."@en ;
+        sh:severity sh:Violation .
+
+    osh:GeneralTimeShape a sh:NodeShape ;
+        sh:targetClass time:TemporalEntity ;
+        sh:property [
+            sh:path ocp:hasActualBeginning ;
+            sh:class time:Instant ;
+            sh:maxCount 1 ;
+            sh:message "Each entity must have at most one actual beginning via 'ocp:hasActualBeginning'."@en ;
+            sh:severity sh:Violation ;
+        ] ;
+        sh:property [
+            sh:path ocp:hasActualEnd ;
+            sh:class time:Instant ;
+            sh:maxCount 1 ;
+            sh:message "Each entity must have at most one actual end via 'ocp:hasActualEnd'."@en ;
+            sh:severity sh:Violation ;
+        ] .
+
+    osh:PhaseTimeExistenceShape a sh:NodeShape ;
+        sh:targetClass ocp:Phase ;
+        sh:or (
+            # Case 1: Actual Beginning with Estimated or Actual End
+            [ sh:and (
+                [ sh:property [
+                    sh:path ocp:hasActualBeginning ;
+                    sh:minCount 1 ;
+                    sh:maxCount 1 ;
+                ] ]
+                [ sh:or (
+                    [ sh:property [
+                            sh:path ocp:hasActualEnd ;
+                            sh:minCount 1 ;
+                            sh:maxCount 1 ;
+                        ] ]
+                    [ sh:property [
+                            sh:path ocp:hasEstimatedEnd ;
+                            sh:minCount 1 ;
+                        ] ]
+                ) ]
+            ) ]
+            # Case 2: Estimated Beginning with Estimated End
+            [ sh:and (
+                [ sh:property [
+                        sh:path ocp:hasEstimatedBeginning ;
+                        sh:minCount 1 ;
+                    ] ]
+                [ sh:property [
+                        sh:path ocp:hasEstimatedEnd ;
+                        sh:minCount 1 ;
+                        sh:message "A phase with an estimated beginning must have an estimated end."@en ;
+                    ] ]
+            ) ]
+        ) ;
+        sh:message "A phase, if it has an actual beginning, must have an actual or estimated end. If it has an estimated beginning, it must have an estimated end."@en ;
+        sh:severity sh:Violation .
+
+    osh:PhaseTimeOrderShape a sh:NodeShape ;
+        sh:targetClass ocp:Phase ;
+        # Ensure each phase belongs to a process
+        sh:property [
+            sh:path ocp:belongsToProcess ;
+            sh:class ocp:Process ;
+            sh:minCount 1 ;
+            sh:maxCount 1 ;
+            sh:message "Each 'ocp:Phase' must belong to exactly one 'ocp:Process' via 'ocp:belongsToProcess'."@en ;
+            sh:severity sh:Violation
+        ] ;
+        # Ensure beginning is before end (if both exist)
+        sh:sparql [
+            sh:select """
+                PREFIX ocp: <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#>
+                PREFIX time: <http://www.w3.org/2006/time#>
+                SELECT $this ?timeStart ?timeEnd
+                WHERE {
+                    $this ocp:hasActualBeginning ?start .
+                    $this ocp:hasActualEnd ?end .
+                    { ?start ocp:hasActualTime ?timeStart . }
+                    { ?end ocp:hasActualTime ?timeEnd . }
+                    FILTER (?timeStart >= ?timeEnd)
+                }
+            """ ;
+            sh:message "Phases in general: Beginning time (ocp:hasActualBeginning) must be before end time (ocp:hasActualEnd)."@en ;
+            sh:severity sh:Violation
+        ] .
+
+    osh:InstantTimeShape a sh:NodeShape ;
+        sh:targetClass time:Instant ;
+        sh:property [
+            sh:path [ sh:alternativePath ( ocp:hasActualTime ocp:hasEstimatedTime ) ] ;
+            sh:qualifiedValueShape [
+                sh:datatype xsd:date ;
+            ] ;
+            sh:qualifiedMinCount 1 ;
+            sh:message "Each instant must have at least one timestamp (either 'ocp:hasActualTime' or 'ocp:hasEstimatedTime') of type xsd:date."@en ;
+            sh:severity sh:Violation ;
+        ] ;
+        sh:property [
+            sh:path ocp:hasActualTime ;
+            sh:datatype xsd:date ;
+            sh:maxCount 1 ;
+            sh:message "Each instant must have at most one actual timestamp via ocp:hasActualTime of type xsd:date."@en ;
+            sh:severity sh:Violation ;
+        ] .
+
+    osh:CycleShape a sh:NodeShape ;
+        sh:targetClass ocp:Cycle ;
+        sh:property [
+            sh:path ocp:belongsToProcess ;
+            sh:class ocp:Process ;
+            sh:minCount 1 ;
+            sh:maxCount 1 ;
+            sh:message "Each 'ocp:Cycle' must belong to exactly one 'ocp:Process' via 'ocp:belongsToProcess'."@en ;
+            sh:severity sh:Violation
+        ] ;
+        # Constraint for hasCycleNumber
+        sh:property [
+            sh:path ocp:hasCycleNumber ;
+            sh:datatype xsd:integer ;
+            sh:minCount 1 ;
+            sh:maxCount 1 ;
+            sh:minInclusive 1 ;
+            sh:message "Each 'ocp:Cycle' must specify exactly one positive integer via 'ocp:hasCycleNumber' to indicate the number of iterations."@en ;
+            sh:severity sh:Violation
+        ] ;
+        # Constraint for hasActualBeginning
+        sh:property [
+            sh:path ocp:hasActualBeginning ;
+            sh:class time:Instant ;
+            sh:minCount 1 ;
+            sh:maxCount 1 ;
+            sh:message "Each 'ocp:Cycle' must have exactly one 'ocp:hasActualBeginning' referencing a 'time:Instant' to mark its start."@en ;
+            sh:severity sh:Violation
+        ] ;
+        # Constraint for end (at least one end: actual or estimated, but max 1 actualEnd)
+        sh:property [
+            sh:path ocp:hasActualEnd ;
+            sh:class time:Instant ;
+            sh:maxCount 1 ;
+            sh:message "Each 'ocp:Cycle' must have at most one 'ocp:hasActualEnd' referencing a 'time:Instant'."@en ;
+            sh:severity sh:Violation
+        ] ;
+        sh:or (
+            [ sh:property [ sh:path ocp:hasActualEnd ; sh:minCount 1 ; sh:class time:Instant ] ]
+            [ sh:property [ sh:path ocp:hasEstimatedEnd ; sh:minCount 1 ; sh:class time:Instant ] ]
+        ) ;
+        sh:message "Each 'ocp:Cycle' must have at least one end (either 'ocp:hasActualEnd' or 'ocp:hasEstimatedEnd') referencing a 'time:Instant'."@en ;
+        sh:severity sh:Violation .
+
+    osh:ProcessShape a sh:NodeShape ;
+        sh:targetClass ocp:Process ;
+        # Constraint for hasProcessID
+        sh:property [
+            sh:path ocp:hasProcessID ;
+            sh:datatype xsd:string ;
+            sh:minCount 1 ;
+            sh:maxCount 1 ;
+            sh:message "Each 'ocp:Process' must have exactly one 'ocp:hasProcessID' of type xsd:string to provide a unique identifier."@en ;
+            sh:severity sh:Violation
+        ] ;
+        # Constraint for hasPhase (process contains phases)
+        sh:property [
+            sh:path ocp:hasPhase ;
+            sh:minCount 1 ;
+            sh:message "Each 'ocp:Process' must consist of at least two instances of 'ocp:Phase' connected via 'ocp:hasPhase'."@en ;
+            sh:severity sh:Violation
+        ] ;
+        # Constraint for isInPhase (process is contained in exactly one phase, if present)
+        sh:property [
+            sh:path ocp:isInPhase ;
+            sh:class ocp:Phase ;
+            sh:maxCount 1 ;
+            sh:message "Each 'ocp:Process' must be embedded in at most one 'ocp:Phase' via 'ocp:isInPhase'."@en ;
+            sh:severity sh:Violation
+        ] ;
+        # Removed shapes for beginning and end, because processes contain phases, which have beginnings and ends (should suffice)
+        # Prevent inception (process cannot be in a phase it contains)
+        sh:sparql [
+            sh:select """
+                PREFIX ocp: <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#>
+                SELECT $this
+                WHERE {
+                    $this ocp:isInPhase ?phase .
+                    $this ocp:hasPhase ?phase .
+                }
+            """ ;
+            sh:message "For 'ocp:Process': A process cannot be embedded in a phase (ocp:isInPhase) that it also contains (ocp:hasPhase)."@en ;
+            sh:severity sh:Violation
+        ] .
+
+
+#################################################################
+#    ADDITIONAL SPARQL Queries
+#################################################################
+
+### GENERIC TIME QUERIES
+
+    # Shape for time:before constraints
+    osh:BeforeTimeShape a sh:NodeShape ;
+        sh:targetClass time:TemporalEntity ;
+        sh:sparql [
+            sh:select """
+                PREFIX ocp: <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#>
+                PREFIX time: <http://www.w3.org/2006/time#>
+                SELECT $this ?other
+                WHERE {
+                    $this time:before ?other .
+                    {
+                        SELECT $this (MAX(?endTime) AS ?latestEndTime)
+                        WHERE {
+                            $this time:hasEnd ?endInstant .
+                            ?endInstant ocp:hasActualTime ?endTime .
+                        }
+                        GROUP BY $this
+                        HAVING (BOUND(?latestEndTime))
+                    }
+                    {
+                        SELECT ?other (MIN(?startTime) AS ?earliestStartTime)
+                        WHERE {
+                            ?other time:hasBeginning ?startInstant .
+                            ?startInstant ocp:hasActualTime ?startTime .
+                        }
+                        GROUP BY ?other
+                        HAVING (BOUND(?earliestStartTime))
+                    }
+                    FILTER (?latestEndTime >= ?earliestStartTime)
+                }
+            """ ;
+            sh:message "For 'time:TemporalEntity': Latest end time (time:hasEnd) must be before earliest start time (time:hasBeginning) of the entity it precedes via 'time:before'."@en ;
+            sh:severity sh:Violation
+        ] .
+
+    # Shape for time:after constraints
+    osh:AfterTimeShape a sh:NodeShape ;
+        sh:targetClass time:TemporalEntity ;
+        sh:sparql [
+            sh:select """
+                PREFIX ocp: <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#>
+                PREFIX time: <http://www.w3.org/2006/time#>
+                SELECT $this ?other
+                WHERE {
+                    $this time:after ?other .
+                    {
+                        SELECT $this (MIN(?startTime) AS ?earliestStartTime)
+                        WHERE {
+                            $this time:hasBeginning ?startInstant .
+                            ?startInstant ocp:hasActualTime ?startTime .
+                        }
+                        GROUP BY $this
+                        HAVING (BOUND(?earliestStartTime))
+                    }
+                    {
+                        SELECT ?other (MAX(?endTime) AS ?latestEndTime)
+                        WHERE {
+                            ?other time:hasEnd ?endInstant .
+                            ?endInstant ocp:hasActualTime ?endTime .
+                        }
+                        GROUP BY ?other
+                        HAVING (BOUND(?latestEndTime))
+                    }
+                    FILTER (?earliestStartTime <= ?latestEndTime)
+                }
+            """ ;
+            sh:message "For 'time:TemporalEntity': Earliest start time (time:hasBeginning) must be after latest end time (time:hasEnd) of the entity it follows via 'time:after'."@en ;
+            sh:severity sh:Violation
+        ] .
+
+    # Shape for ocp:beginsBefore constraints
+    osh:BeginsBeforeTimeShape a sh:NodeShape ;
+        sh:targetClass time:TemporalEntity ;
+        sh:sparql [
+            sh:select """
+                PREFIX ocp: <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#>
+                PREFIX time: <http://www.w3.org/2006/time#>
+                SELECT $this ?other
+                WHERE {
+                    $this ocp:beginsBefore ?other .
+                    {
+                        SELECT $this (MAX(?startTime) AS ?latestStartTime)
+                        WHERE {
+                            $this time:hasBeginning ?startInstant .
+                            ?startInstant ocp:hasActualTime ?startTime .
+                        }
+                        GROUP BY $this
+                        HAVING (BOUND(?latestStartTime))
+                    }
+                    {
+                        SELECT ?other (MIN(?startTime) AS ?earliestStartTime)
+                        WHERE {
+                            ?other time:hasBeginning ?startInstant .
+                            ?startInstant ocp:hasActualTime ?startTime .
+                        }
+                        GROUP BY ?other
+                        HAVING (BOUND(?earliestStartTime))
+                    }
+                    FILTER (?latestStartTime >= ?earliestStartTime)
+                }
+            """ ;
+            sh:message "For 'time:TemporalEntity': Latest start time (time:hasBeginning) must be before earliest start time of the entity it precedes via 'ocp:beginsBefore'."@en ;
+            sh:severity sh:Violation
+        ] .
+
+    # Shape for ocp:endsBefore constraints
+    osh:EndsBeforeTimeShape a sh:NodeShape ;
+        sh:targetClass time:TemporalEntity ;
+        sh:sparql [
+            sh:select """
+                PREFIX ocp: <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#>
+                PREFIX time: <http://www.w3.org/2006/time#>
+                SELECT $this ?other
+                WHERE {
+                    $this ocp:endsBefore ?other .
+                    {
+                        SELECT $this (MAX(?endTime) AS ?latestEndTime)
+                        WHERE {
+                            $this time:hasEnd ?endInstant .
+                            ?endInstant ocp:hasActualTime ?endTime .
+                        }
+                        GROUP BY $this
+                        HAVING (BOUND(?latestEndTime))
+                    }
+                    {
+                        SELECT ?other (MIN(?endTime) AS ?earliestEndTime)
+                        WHERE {
+                            ?other time:hasEnd ?endInstant .
+                            ?endInstant ocp:hasActualTime ?endTime .
+                        }
+                        GROUP BY ?other
+                        HAVING (BOUND(?earliestEndTime))
+                    }
+                    FILTER (?latestEndTime >= ?earliestEndTime)
+                }
+            """ ;
+            sh:message "For 'time:TemporalEntity': Latest end time (time:hasEnd) must be before earliest end time of the entity it precedes via 'ocp:endsBefore'."@en ;
+            sh:severity sh:Violation
+        ] .
+
+    # Shape for ocp:endsAfter constraints
+    osh:EndsAfterTimeShape a sh:NodeShape ;
+        sh:targetClass time:TemporalEntity ;
+        sh:sparql [
+            sh:select """
+                PREFIX ocp: <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#>
+                PREFIX time: <http://www.w3.org/2006/time#>
+                SELECT $this ?other
+                WHERE {
+                    $this ocp:endsAfter ?other .
+                    {
+                        SELECT $this (MIN(?endTime) AS ?earliestEndTime)
+                        WHERE {
+                            $this time:hasEnd ?endInstant .
+                            ?endInstant ocp:hasActualTime ?endTime .
+                        }
+                        GROUP BY $this
+                        HAVING (BOUND(?earliestEndTime))
+                    }
+                    {
+                        SELECT ?other (MAX(?endTime) AS ?latestEndTime)
+                        WHERE {
+                            ?other time:hasEnd ?endInstant .
+                            ?endInstant ocp:hasActualTime ?endTime .
+                        }
+                        GROUP BY ?other
+                        HAVING (BOUND(?latestEndTime))
+                    }
+                    FILTER (?earliestEndTime <= ?latestEndTime)
+                }
+            """ ;
+            sh:message "For 'time:TemporalEntity': Earliest end time (time:hasEnd) must be after latest end time of the entity it follows via 'ocp:endsAfter'."@en ;
+            sh:severity sh:Violation
+        ] .
+
+    # Shape for ocp:beginsWith constraints
+    osh:BeginsWithTimeShape a sh:NodeShape ;
+        sh:targetClass time:TemporalEntity ;
+        sh:sparql [
+            sh:select """
+                PREFIX ocp: <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#>
+                PREFIX time: <http://www.w3.org/2006/time#>
+                SELECT $this ?other
+                WHERE {
+                    $this ocp:beginsWith ?other .
+                    {
+                        SELECT $this (MIN(?startTime) AS ?startTimeThis)
+                        WHERE {
+                            $this time:hasBeginning ?startInstant .
+                            ?startInstant ocp:hasActualTime ?startTime .
+                        }
+                        GROUP BY $this
+                        HAVING (BOUND(?startTimeThis))
+                    }
+                    {
+                        SELECT ?other (MIN(?startTime) AS ?startTimeOther)
+                        WHERE {
+                            ?other time:hasBeginning ?startInstant .
+                            ?startInstant ocp:hasActualTime ?startTime .
+                        }
+                        GROUP BY ?other
+                        HAVING (BOUND(?startTimeOther))
+                    }
+                    FILTER (?startTimeThis != ?startTimeOther)
+                }
+            """ ;
+            sh:message "For 'time:TemporalEntity': Earliest start time (time:hasBeginning) must equal the earliest start time of the entity it begins with via 'ocp:beginsWith'."@en ;
+            sh:severity sh:Violation
+        ] .
+
+    # Shape for ocp:endsWith constraints
+    osh:EndsWithTimeShape a sh:NodeShape ;
+        sh:targetClass time:TemporalEntity ;
+        sh:sparql [
+            sh:select """
+                PREFIX ocp: <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#>
+                PREFIX time: <http://www.w3.org/2006/time#>
+                SELECT $this ?other
+                WHERE {
+                    $this ocp:endsWith ?other .
+                    {
+                        SELECT $this (MAX(?endTime) AS ?endTimeThis)
+                        WHERE {
+                            $this time:hasEnd ?endInstant .
+                            ?endInstant ocp:hasActualTime ?endTime .
+                        }
+                        GROUP BY $this
+                        HAVING (BOUND(?endTimeThis))
+                    }
+                    {
+                        SELECT ?other (MAX(?endTime) AS ?endTimeOther)
+                        WHERE {
+                            ?other time:hasEnd ?endInstant .
+                            ?endInstant ocp:hasActualTime ?endTime .
+                        }
+                        GROUP BY ?other
+                        HAVING (BOUND(?endTimeOther))
+                    }
+                    FILTER (?endTimeThis != ?endTimeOther)
+                }
+            """ ;
+            sh:message "For 'time:TemporalEntity': Latest end time (time:hasEnd) must equal the latest end time of the entity it ends with via 'ocp:endsWith'."@en ;
+            sh:severity sh:Violation
+        ] .
