@@ -1,0 +1,56 @@
+@prefix ex: <http://example.org/> .
+@prefix ocp: <http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:ProductSellingProcess a ocp:Process .
+
+
+ex:AcquisitionPhase a ocp:Phase ;
+	ocp:belongsToProcess ex:ProductSellingProcess ;
+	ocp:beginsWith ex:MarketAnalysisProcess ;
+	ocp:endsWith ex:AdvertisementProcess .
+	
+	ex:MarketAnalysisProcess a ocp:Process ;
+		ocp:isInPhase ex:AcquisitionPhase .
+
+
+		ex:ProblemIdentificationPhase a ocp:Phase ;
+			ocp:belongsToProcess ex:MarketAnalysisProcess .
+
+		ex:CustomerIdentificationPhase a ocp:Phase ;
+			ocp:belongsToProcess ex:MarketAnalysisProcess .
+		
+		ex:ProductDesignPhase a ocp:Phase ;
+			ocp:belongsToProcess ex:MarketAnalysisProcess .
+		
+		ex:BusinessCaseDesignPhase a ocp:Phase ;
+			ocp:belongsToProcess ex:MarketAnalysisProcess .
+		
+		ex:BusinessCaseValidationPhase a ocp:Phase ;
+			ocp:belongsToProcess ex:MarketAnalysisProcess .
+		
+	ex:AdvertisementProcess a ocp:Process;
+		ocp:isInPhase ex:AcquisitionPhase .
+
+
+
+ex:ProductionPhase a ocp:Phase .
+ex:QualityManagementPhase a ocp:Phase.
+
+ex:QualityCheckCycle a ocp:Cycle .
+
+ex:VisualQualityCheck a time:instant .
+ex:FunctionalQualityCheck a time:instant .
+ex:QualityCheck_Successful a time:instant .
+ex:QualityCheck_Failed a time:instant .
+
+
+ex:ShippingPhase a ocp:Phase .
+
+ex:CustomerManagementPhase a ocp:Phase .
+
+
+
+
+
