@@ -5,7 +5,6 @@
 
 ex:ProductSellingProcess a ocp:Process .
 
-
 ex:AcquisitionPhase a ocp:Phase ;
 	ocp:belongsToProcess ex:ProductSellingProcess ;
 	ocp:beginsWith ex:MarketAnalysisProcess ;
