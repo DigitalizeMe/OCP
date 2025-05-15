@@ -14,43 +14,194 @@ ex:AcquisitionPhase a ocp:Phase ;
 	ex:MarketAnalysisProcess a ocp:Process ;
 		ocp:isInPhase ex:AcquisitionPhase .
 
-
 		ex:ProblemIdentificationPhase a ocp:Phase ;
-			ocp:belongsToProcess ex:MarketAnalysisProcess .
+			ocp:belongsToProcess ex:MarketAnalysisProcess ;
+			ocp:hasActualBeginning ex:ProblemIdentificationStart ;
+			ocp:hasActualEnd ex:ProblemIdentificationEnd ;
+			ocp:beginsWith ex:CustomerIdentificationPhase .	
+
+			ex:ProblemIdentificationStart a time:Instant ;
+				ocp:hasActualTime "2025-05-01"^^xsd:date .
+
+			ex:ProblemIdentificationEnd a time:Instant ;
+				ocp:hasActualTime "2025-05-31"^^xsd:date .
 
 		ex:CustomerIdentificationPhase a ocp:Phase ;
-			ocp:belongsToProcess ex:MarketAnalysisProcess .
+			ocp:belongsToProcess ex:MarketAnalysisProcess ;
+			ocp:hasActualBeginning ex:CustomerIdentificationStart ;
+			ocp:hasActualEnd ex:CustomerIdentificationEnd .
+
+			ex:CustomerIdentificationStart a time:Instant ;
+				ocp:hasActualTime "2025-05-01"^^xsd:date .
+
+			ex:CustomerIdentificationEnd a time:Instant ;
+				ocp:hasActualTime "2025-06-15"^^xsd:date .
 		
 		ex:ProductDesignPhase a ocp:Phase ;
-			ocp:belongsToProcess ex:MarketAnalysisProcess .
-		
+			ocp:belongsToProcess ex:MarketAnalysisProcess ;
+			ocp:beginsAfter ex:ProblemIdentificationPhase , ex:CustomerIdentificationPhase ;
+			ocp:beginsWith ex:ProductDesignStart ;
+			ocp:endsWith ex:ProductDesignEnd .
+
+			ex:ProductDesignStart a time:Instant ;
+				ocp:startsPhase ex:ProductDesignPhase ;
+				ocp:hasActualTime "2025-06-16"^^xsd:date .
+
+			ex:ProductDesignEnd a time:Instant ;
+				ocp:endsPhase ex:ProductDesignPhase ;
+				ocp:hasActualTime "2025-07-15"^^xsd:date .
+	
 		ex:BusinessCaseDesignPhase a ocp:Phase ;
-			ocp:belongsToProcess ex:MarketAnalysisProcess .
+			ocp:belongsToProcess ex:MarketAnalysisProcess ;
+			ocp:beginsAfter ex:ProductDesignPhase ;
+			ocp:beginsWith ex:BusinessCaseConception ;
+			ocp:endsWith ex:BusinessCaseFinalization .
+
+			ex:BusinessCaseConception a time:Instant ;
+				ocp:hasActualTime "2025-07-16"^^xsd:date .
+
+			ex:BusinessCaseFinalization a time:Instant ;
+				ocp:hasActualTime "2025-07-31"^^xsd:date .
 		
 		ex:BusinessCaseValidationPhase a ocp:Phase ;
-			ocp:belongsToProcess ex:MarketAnalysisProcess .
+			ocp:belongsToProcess ex:MarketAnalysisProcess ;
+			ocp:beginsWith ex:BusinessCaseFinalization ;
+			ocp:hasEstimatedEnd ex:EndOfProduction .
+
+			ex:EndOfProduction a time:Instant ;
+				ocp:hasEstimatedTime "2030-12-31"^^xsd:date .
 		
 	ex:AdvertisementProcess a ocp:Process;
-		ocp:isInPhase ex:AcquisitionPhase .
+		ocp:isInPhase ex:AcquisitionPhase ;
+		ocp:beginsWith ex:BusinessCaseFinalization ;
+		ocp:endsWith ex:EndOfProduction .
+
+ex:ProductOrder a time:Instant ;
+	ocp:belongsToProcess ex:ProductSellingProcess ;
+	time:after ex:BusinessCaseFinalization ;
+	ocp:startsCycle ex:OrderHandlingCycle ;
+	ocp:hasActualTime "2025-08-21"^^xsd:date .
+
+ex:OrderHandlingCycle a ocp:Cycle ;
+	ocp:belongsToProcess ex:ProductSellingProcess ;
+	ocp:consistsOf ex:ProductionPhase, ex:QualityManagementPhase , ex:ShippingPhase , ex:CustomerManagementPhase ;
+	ocp:beginsWith ex:ProductOrder ;
+	ocp:endsWith ex:EndOfWarranty .
+
+ex:ProductionPhase a ocp:Phase ;
+	ocp:belongsToProcess ex:ProductSellingProcess ;
+    ocp:beginsWith ex:ProductionStart ;
+    ocp:endsWith ex:ProductionEnd .
+
+	ex:ProductionStart a time:Instant ;
+		ocp:hasActualTime "2025-08-22"^^xsd:date .
+
+	ex:ProductionEnd a time:Instant ;
+		ocp:hasActualTime "2025-08-25"^^xsd:date .
+
+	ex:ProductionStart2 a time:Instant ;
+		ocp:hasActualTime "2025-08-30"^^xsd:date .
+
+	ex:ProductionEnd2 a time:Instant ;
+		ocp:hasActualTime "2025-09-03"^^xsd:date .
+
+ex:QualityManagementPhase a ocp:Phase;
+	ocp:belongsToProcess ex:ProductSellingProcess ;
+    ocp:beginsWith ex:QualityCheckStart ;
+    ocp:endsWith ex:QualityCheckApproval .
+
+	ex:QualityCheckStart a time:instant ;
+		ocp:after ex:ProductionEnd ;
+		ocp:before ex:VisualQualityCheck ;
+		ocp:startsPhase ex:QualityManagementPhase ;
+		ocp:startsCycle ex:QualityCheckCycle ;
+		ocp:hasActualTime "2025-08-26"^^xsd:date .
+
+	ex:VisualQualityCheck a time:instant ;
+		ocp:before ex:FunctionalQualityCheck ;
+		ocp:belongsToPhase ex:QualityManagementPhase ;
+		ocp:belongsToCycle ex:QualityCheckCycle ;
+		ocp:hasActualTime "2025-08-27"^^xsd:date .
+
+	ex:FunctionalQualityCheck a time:instant ;
+		ocp:before ex:QualityCheckApproval , ex:QualityCheckRejection ;
+		ocp:belongsToPhase ex:QualityManagementPhase ;
+		ocp:belongsToCycle ex:QualityCheckCycle ;
+		ocp:hasActualTime "2025-08-28"^^xsd:date .
+
+	ex:QualityCheckRejection a time:instant ;
+		ocp:belongsToPhase ex:QualityManagementPhase ;
+		ocp:endsCycle ex:QualityCheckCycle ;
+		ocp:hasActualTime "2025-08-29"^^xsd:date .
+
+	ex:QualityCheckStart2 a time:instant ;
+		ocp:after ex:ProductionEnd ;
+		ocp:before ex:VisualQualityCheck ;
+		ocp:startsPhase ex:QualityManagementPhase ;
+		ocp:startsCycle ex:QualityCheckCycle2 ;
+		ocp:hasActualTime "2025-09-04"^^xsd:date .
+
+	ex:VisualQualityCheck2 a time:instant ;
+		ocp:before ex:FunctionalQualityCheck ;
+		ocp:belongsToPhase ex:QualityManagementPhase ;
+		ocp:belongsToCycle ex:QualityCheckCycle2 ;
+		ocp:hasActualTime "2025-09-05"^^xsd:date .
+
+	ex:FunctionalQualityCheck2 a time:instant ;
+		ocp:before ex:QualityCheckApproval , ex:QualityCheckRejection ;
+		ocp:belongsToPhase ex:QualityManagementPhase ;
+		ocp:belongsToCycle ex:QualityCheckCycle2 ;
+		ocp:hasActualTime "2025-09-06"^^xsd:date .
+
+	ex:QualityCheckApproval a time:instant ;
+		ocp:endsPhase ex:QualityManagementPhase ;
+		ocp:endsCycle ex:QualityCheckCycle2 ;
+		ocp:hasActualTime "2025-09-07"^^xsd:date .
 
 
+ex:QualityCheckCycle a ocp:Cycle ;
+	ocp:belongsToProcess ex:ProductSellingProcess ;
+	ocp:hasCycleNumber 1 ;
+	ocp:hasActualBeginning ex:QualityCheckStart ;
+	ocp:hasActualEnd ex:QualityCheckRejection .
 
-ex:ProductionPhase a ocp:Phase .
-ex:QualityManagementPhase a ocp:Phase.
+ex:QualityCheckCycle2 a ocp:Cycle ;
+	ocp:belongsToProcess ex:ProductSellingProcess ;
+	ocp:hasCycleNumber 2 ;
+	ocp:hasActualBeginning ex:QualityCheckStart2 ;
+	ocp:hasActualEnd ex:QualityCheckApproval .
 
-ex:QualityCheckCycle a ocp:Cycle .
+ex:QualityCheckTransition a ocp:Transition ;
+	ocp:belongsToProcess ex:ProductSellingProcess ;
+    ocp:after ex:QualityCheckApproval ;
+    ocp:before ex:ShippingPhase ;
+	ocp:hasActualTime "2025-09-08"^^xsd:date .
 
-ex:VisualQualityCheck a time:instant .
-ex:FunctionalQualityCheck a time:instant .
-ex:QualityCheck_Successful a time:instant .
-ex:QualityCheck_Failed a time:instant .
+ex:ShippingPhase a ocp:Phase ;
+	ocp:belongsToProcess ex:ProductSellingProcess ;
+	ocp:beginsWith ex:ShippingPreparation ;
+	ocp:endsWith ex:Shipment_Delivery .
+
+	ex:ShippingPreparation a time:Instant ;
+		ocp:hasActualTime "2025-09-09"^^xsd:date .
+
+	ex:ShipmentPickUp a time:Instant ;
+		ocp:belongsToPhase ex:ShippingPhase ;
+		ocp:hasActualTime "2025-09-10"^^xsd:date .
+
+	ex:Shipment_Delivery  a time:Instant ;
+		ocp:hasActualTime "2025-09-14"^^xsd:date .
 
 
-ex:ShippingPhase a ocp:Phase .
+ex:CustomerManagementPhase a ocp:Phase ;
+	ocp:belongsToProcess ex:ProductSellingProcess ;
+	ocp:beginsWith ex:ProductOrder ;
+	ocp:endsWith ex:EndOfWarranty .
 
-ex:CustomerManagementPhase a ocp:Phase .
+ex:EndOfWarranty a time:Instant ;
+	ocp:hasActualTime "2030-09-07"^^xsd:date .
 
-
-
+ex:EndOfProduction a time:Instant ;
+	ocp:hasEstimatedTime "2035-12-31"^^xsd:date .
 
 

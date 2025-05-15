@@ -1,6 +1,6 @@
 @prefix sh:    <http://www.w3.org/ns/shacl#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
-@prefix ocp:  <http://www.semanticweb.org/DigitalizeMe/ontologies/2022/9/cMod_V0.1#> .
+@prefix ocp: <http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#> .
 @prefix time:  <http://www.w3.org/2006/time#> .
 @prefix osh:   <http://www.ocpshape.de/shape#> .
 
@@ -85,7 +85,7 @@
         # Ensure beginning is before end (if both exist)
         sh:sparql [
             sh:select """
-                PREFIX ocp: <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#>
+                PREFIX ocp: <http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#>
                 PREFIX time: <http://www.w3.org/2006/time#>
                 SELECT $this ?timeStart ?timeEnd
                 WHERE {
@@ -193,7 +193,7 @@
         # Prevent inception (process cannot be in a phase it contains)
         sh:sparql [
             sh:select """
-                PREFIX ocp: <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#>
+                PREFIX ocp: <http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#>
                 SELECT $this
                 WHERE {
                     $this ocp:isInPhase ?phase .
@@ -216,7 +216,7 @@
         sh:targetClass time:TemporalEntity ;
         sh:sparql [
             sh:select """
-                PREFIX ocp: <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#>
+                PREFIX ocp: <http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#>
                 PREFIX time: <http://www.w3.org/2006/time#>
                 SELECT $this ?other
                 WHERE {
@@ -251,7 +251,7 @@
         sh:targetClass time:TemporalEntity ;
         sh:sparql [
             sh:select """
-                PREFIX ocp: <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#>
+                PREFIX ocp: <http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#>
                 PREFIX time: <http://www.w3.org/2006/time#>
                 SELECT $this ?other
                 WHERE {
@@ -286,7 +286,7 @@
         sh:targetClass time:TemporalEntity ;
         sh:sparql [
             sh:select """
-                PREFIX ocp: <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#>
+                PREFIX ocp: <http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#>
                 PREFIX time: <http://www.w3.org/2006/time#>
                 SELECT $this ?other
                 WHERE {
@@ -321,7 +321,7 @@
         sh:targetClass time:TemporalEntity ;
         sh:sparql [
             sh:select """
-                PREFIX ocp: <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#>
+                PREFIX ocp: <http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#>
                 PREFIX time: <http://www.w3.org/2006/time#>
                 SELECT $this ?other
                 WHERE {
@@ -356,7 +356,7 @@
         sh:targetClass time:TemporalEntity ;
         sh:sparql [
             sh:select """
-                PREFIX ocp: <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#>
+                PREFIX ocp: <http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#>
                 PREFIX time: <http://www.w3.org/2006/time#>
                 SELECT $this ?other
                 WHERE {
@@ -391,7 +391,7 @@
         sh:targetClass time:TemporalEntity ;
         sh:sparql [
             sh:select """
-                PREFIX ocp: <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#>
+                PREFIX ocp: <http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#>
                 PREFIX time: <http://www.w3.org/2006/time#>
                 SELECT $this ?other
                 WHERE {
@@ -426,7 +426,7 @@
         sh:targetClass time:TemporalEntity ;
         sh:sparql [
             sh:select """
-                PREFIX ocp: <http://www.semanticweb.org/albrechtvaatz/ontologies/2022/9/cMod_V0.1#>
+                PREFIX ocp: <http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#>
                 PREFIX time: <http://www.w3.org/2006/time#>
                 SELECT $this ?other
                 WHERE {

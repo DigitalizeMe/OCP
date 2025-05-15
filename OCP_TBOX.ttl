@@ -13,7 +13,7 @@
 #################################################################
 
 
-	###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#beginsAfter
+	###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#beginsAfter
 	ocp:beginsAfter rdf:type owl:ObjectProperty ;
 		rdfs:subPropertyOf <http://www.w3.org/2006/time#hasBeginning> ;
 		rdfs:domain <http://www.w3.org/2006/time#Interval> ;
@@ -24,7 +24,7 @@
 		rdfs:label "begins after"@en .
 
 
-	###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#beginsBefore
+	###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#beginsBefore
 	ocp:beginsBefore rdf:type owl:ObjectProperty ;
 		rdfs:subPropertyOf <http://www.w3.org/2006/time#hasBeginning> ;
 		rdfs:domain <http://www.w3.org/2006/time#Interval> ;
@@ -35,7 +35,7 @@
 		rdfs:label "begins before"@en .
 
 
-	###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#beginsWith
+	###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#beginsWith
 	ocp:beginsWith rdf:type owl:ObjectProperty ;
 		rdfs:subPropertyOf <http://www.w3.org/2006/time#hasBeginning> ;
 		rdfs:domain <http://www.w3.org/2006/time#Interval> ;
@@ -44,7 +44,7 @@
 		rdfs:label "begins with"@en .
 
 
-    ###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#belongsToCycle
+    ###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#belongsToCycle
     ocp:belongsToCycle rdf:type owl:ObjectProperty ;
 		rdfs:domain <http://www.w3.org/2006/time#Instant> ;
 		rdfs:range ocp:Cycle ;
@@ -52,7 +52,7 @@
 		rdfs:label "belongs to cycle"@en .				
 
 
-    ###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#belongsToInstant
+    ###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#belongsToInstant
     ocp:belongsToInstant rdf:type owl:ObjectProperty ;
 		rdfs:domain ocp:Phase ;
 		rdfs:range <http://www.w3.org/2006/time#Instant> ;
@@ -61,7 +61,7 @@
 		rdfs:label "belongs to instant"@en .
 
 
-    ###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#belongsToProcess
+    ###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#belongsToProcess
     ocp:belongsToProcess a rdf:Property ;
         rdfs:domain <http://www.w3.org/2006/time#TemporalEntity> ;
 		rdfs:range ocp:Process ;
@@ -69,7 +69,7 @@
         rdfs:label "belongs to Process" .
 
 
-    ###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#belongsToPhase
+    ###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#belongsToPhase
     ocp:belongsToPhase rdf:type owl:ObjectProperty ;
 		rdfs:domain <http://www.w3.org/2006/time#Instant> ;
 		rdfs:range ocp:Phase ;
@@ -78,7 +78,7 @@
 		rdfs:label "belongs to phase"@en .
 
 
-	###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#endsAfter
+	###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#endsAfter
 	ocp:endsAfter rdf:type owl:ObjectProperty ;
 		rdfs:subPropertyOf <http://www.w3.org/2006/time#hasEnd> ;
 		rdfs:domain <http://www.w3.org/2006/time#Interval> ;
@@ -89,7 +89,7 @@
 		rdfs:label "ends after"@en .
 
 
-	###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#endsBefore
+	###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#endsBefore
 	ocp:endsBefore rdf:type owl:ObjectProperty ;
 		rdfs:subPropertyOf <http://www.w3.org/2006/time#hasEnd> ;
 		rdfs:domain <http://www.w3.org/2006/time#Interval> ;
@@ -100,7 +100,7 @@
 		rdfs:label "ends before"@en .
 
 
-	###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#endsCycle
+	###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#endsCycle
 	ocp:endsCycle rdf:type owl:ObjectProperty ;
 		rdfs:subPropertyOf <http://www.w3.org/2006/time#hasEnd> ;
 		rdfs:domain <http://www.w3.org/2006/time#Instant> ;
@@ -109,7 +109,7 @@
 		rdfs:label "ends cycle"@en .
 
 
-	###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#endsPhase
+	###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#endsPhase
 	ocp:endsPhase rdf:type owl:ObjectProperty ;
 		rdfs:subPropertyOf <http://www.w3.org/2006/time#hasEnd> ;
 		rdfs:domain <http://www.w3.org/2006/time#Instant> ;
@@ -118,7 +118,7 @@
 		rdfs:label "ends phase"@en .
 
 
-	###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#endsWith
+	###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#endsWith
 	ocp:endsWith rdf:type owl:ObjectProperty ;
 		rdfs:subPropertyOf <http://www.w3.org/2006/time#hasEnd> ;
 		rdfs:domain <http://www.w3.org/2006/time#Interval> ;
@@ -127,7 +127,7 @@
 		rdfs:label "ends with"@en .
 
 
-	###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#hasActualBeginning
+	###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#hasActualBeginning
 	ocp:hasActualBeginning rdf:type owl:ObjectProperty ;
 		rdfs:subPropertyOf <http://www.w3.org/2006/time#hasBeginning> ;
 		rdfs:domain <http://www.w3.org/2006/time#Interval> ;
@@ -136,7 +136,7 @@
 		rdfs:label "has actual beginning"@en .
 
 
-    ###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#hasActualEnd
+    ###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#hasActualEnd
     ocp:hasActualEnd rdf:type owl:ObjectProperty ;
 		rdfs:subPropertyOf <http://www.w3.org/2006/time#hasEnd> ;
 		rdfs:domain <http://www.w3.org/2006/time#Interval> ;
@@ -145,7 +145,7 @@
 		rdfs:label "has actual end"@en .
 
 
-    ###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#hasEstimatedBeginning
+    ###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#hasEstimatedBeginning
     ocp:hasEstimatedBeginning rdf:type owl:ObjectProperty ;
 		rdfs:subPropertyOf <http://www.w3.org/2006/time#hasBeginning> ;
 		rdfs:domain <http://www.w3.org/2006/time#Interval> ;
@@ -154,7 +154,7 @@
 		rdfs:label "has estimated beginning"@en .
 
 
-    ###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#hasEstimatedEnd
+    ###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#hasEstimatedEnd
     ocp:hasEstimatedEnd rdf:type owl:ObjectProperty ;
 		rdfs:subPropertyOf <http://www.w3.org/2006/time#hasEnd> ;
 		rdfs:domain <http://www.w3.org/2006/time#Interval> ;
@@ -163,7 +163,7 @@
 		rdfs:label "has estimated end"@en .
 
 
-	###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#isInPhase
+	###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#isInPhase
     ocp:isInPhase rdf:type owl:ObjectProperty ;
 		rdfs:domain ocp:Process ;
 		rdfs:range ocp:Phase ;
@@ -171,7 +171,7 @@
 		rdfs:label "is in phase"@en .
 
 
-    ###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#startsCycle
+    ###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#startsCycle
     ocp:startsCycle rdf:type owl:ObjectProperty ;
 		rdfs:subPropertyOf <http://www.w3.org/2006/time#hasBeginning> ;
 		rdfs:domain <http://www.w3.org/2006/time#Instant> ;
@@ -180,7 +180,7 @@
 		rdfs:label "starts cycle"@en .
 
 
-    ###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#startsPhase
+    ###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#startsPhase
     ocp:startsPhase rdf:type owl:ObjectProperty ;
 		rdfs:subPropertyOf <http://www.w3.org/2006/time#hasBeginning> ;
 		rdfs:domain <http://www.w3.org/2006/time#Instant> ;
@@ -194,7 +194,7 @@
 #################################################################
 
 
-    ###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#hasActualTime
+    ###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#hasActualTime
     ocp:hasActualTime rdf:type owl:DatatypeProperty ;
 		rdfs:subPropertyOf <http://www.w3.org/2006/time#hasTime> ;
 		rdfs:domain <http://www.w3.org/2006/time#Instant> ;
@@ -203,7 +203,7 @@
 		rdfs:label "has actual time"@en .
 
 
-    ###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#hasCycleNumber
+    ###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#hasCycleNumber
     ocp:hasCycleNumber rdf:type owl:DatatypeProperty ;
 		rdfs:domain ocp:Cycle ;
 		rdfs:range xsd:integer ;
@@ -211,7 +211,7 @@
 		rdfs:label "has cycle number"@en .
 
 
-    ###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#hasEstimatedTime
+    ###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#hasEstimatedTime
     ocp:hasEstimatedTime rdf:type owl:DatatypeProperty ;
 		rdfs:subPropertyOf <http://www.w3.org/2006/time#hasTime> ;
 		rdfs:domain <http://www.w3.org/2006/time#Instant> ;
@@ -220,7 +220,7 @@
 		rdfs:label "has estimated time"@en .
 
 
-	###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#hasProcessID
+	###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#hasProcessID
 	ocp:hasProcessID rdf:type owl:DatatypeProperty ;
 		rdfs:domain ocp:Process ;
 		rdfs:range xsd:string ;
@@ -233,28 +233,28 @@
 #################################################################
 
     
-    ###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#Cycle
+    ###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#Cycle
     ocp:Cycle rdf:type owl:Class ;
 		rdfs:subClassOf <http://www.w3.org/2006/time#Interval> ;
 		rdfs:comment "This class represents a recurring time span with a starting point, period, and duration, used to track iterating processes."@en ;
 		rdfs:label "Cycle"@en .
 
 
-	###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#Process		
+	###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#Process		
 	ocp:Process rdf:type owl:Class ;
 		rdfs:subClassOf <http://www.w3.org/2006/time#Interval> ;
 		rdfs:comment "This class represents a complete or partial process as a combination of at least 2 different phases or intervals. Processes can be within phases or intervals."@en ;
 		rdfs:label "Process"@en .
 
 
-    ###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#Phase
+    ###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#Phase
     ocp:Phase rdf:type owl:Class ;
 		rdfs:subClassOf <http://www.w3.org/2006/time#Interval> ;
 		rdfs:comment "This class represents the main chronological blocks of a building’s process (e.g., planning, construction, usage), serving as a customizable base structure."@en ;
 		rdfs:label "Phase"@en .
 
 
-    ###  http://www.semanticweb.org/albrechtvaatz/ontologies/2025/3/OCP#Transition
+    ###  http://www.semanticweb.org/DigitalizeMe/ontologies/2025/3/OCP#Transition
     ocp:Transition rdf:type owl:Class ;
 		rdfs:subClassOf <http://www.w3.org/2006/time#Instant> ;
 		rdfs:comment "This class represents key milestones or triggering events occurring between phases, typically enabling the start of the next phase or marking phase completion."@en ;
